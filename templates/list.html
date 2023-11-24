@@ -1,0 +1,151 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Directory Listing</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .file-browser {
+            max-width: 900px;
+            margin: 20px auto;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .file-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .file-item:hover {
+            background-color: #f5f5f5;
+        }
+
+        .file-icon {
+            margin-right: 10px;
+        }
+
+        .file-name {
+            flex: 1;
+            font-size: 1.5em;
+
+        }
+
+        .file-size {
+            font-size: 0.8em;
+            color: #888;
+        }
+
+        .directory-info {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .directory-parent {
+            background-color: #7e7e7e;
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .folder-link,
+        .video-link,
+        .download-link {
+            text-decoration: none;
+            color: #333;
+        }
+
+
+        video {
+            max-width: 200%;
+            width: 100%;
+            margin-bottom: 5px;
+            height: auto;
+        }
+
+        .video-container {
+            display: inline-block; /* Ensure the span behaves like a block element */
+            width: 100%; /* Ensure the span takes the full width of its container */
+            max-width: 100%; /* Ensure the span doesn't exceed the width of its container */
+            overflow: hidden; /* Hide any overflow content */
+            align-items: center;
+
+        }
+    </style>
+</head>
+</head>
+
+<body>
+    <div class="file-browser">
+        <div class="directory-info">
+            <strong>Current Directory:</strong> {{ current_path }}
+        </div>
+        <div class="directory-parent">
+            <strong>Parent Directory:</strong> <a class="folder-link"
+                href="{{ url_for('list_files_and_folders', path=parent_directory) }}">
+                <span>⬆️</span> </a>
+        </div>
+        <ul class="file-list">
+            {% for entry, full_path, is_directory in contents %}
+            <li class="file-item">
+                {% if is_directory %}
+                <span class="file-icon">📂</span>
+                <a class="folder-link" href="{{ url_for('list_files_and_folders', path=full_path) }}">
+                    <span class="file-name"> {{ entry }} </span> </a>
+                <!-- <span class="file-size">4 KB</span> -->
+                {% else %}
+                <span class="file-icon">📄</span>
+                <span class="file-name"> {{ entry }} </span>
+
+                {% endif %}
+
+            </li>
+            {% endfor %}
+
+            {% for entry, full_path, vthum_fullpath, file_size in contents_videos %}
+            <li class="file-item">
+                <span class="file-icon">📄</span>
+                <span class="file-name">
+                    {{ entry }}
+                    <a href="{{ url_for('download_file', file=full_path,  _external=True, _schema='https', viewarg1=1  )}}"
+                        class="download-link"> ⬇️ </a>
+                    <span class="file-size"> {{ file_size }}</span>
+
+                </span>
+            </li>
+            <li>
+                <span class="file-name">
+                    <span class="video-container">
+                    <video controls playsinline  preload="auto" >
+                        <source
+                            src="{{ url_for('video_iphone', videopath=vthum_fullpath, _external=True, _schema='https', viewarg1=1 ) }}"
+                            type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    </span>
+                </span>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+
+</body>
+
+</html>
