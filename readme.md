@@ -6,7 +6,7 @@ Motivation: Earlier I used to use another open source web-based file viewer. Iss
 
 This is a flask based file viewer and video displayer. It lists all the folders. For videos it searches for video-thumbnails. Any displays that instead. To generate video thumbnails, run `script/generate_preview.py` 
 
-![Alt Text](./static/screenshot.png)
+![Alt Text](./screenshot.png)
 
 
 ## How to run 
